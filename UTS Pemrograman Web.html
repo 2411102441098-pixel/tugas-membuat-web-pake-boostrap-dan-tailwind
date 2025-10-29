@@ -1,0 +1,276 @@
+ <!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Input Data Mahasiswa</title>
+  <style>
+    body {
+      background-color: white;
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+
+    .container {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    /* Kotak Form */
+    .form-box {
+      border: 2px solid black;
+      border-radius: 20px;
+      padding: 25px;
+      width: 350px;
+      background-color: #fff;
+    }
+
+    .form-box h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #999;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      background-color: black;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #333;
+    }
+
+    /* Area kanan */
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      width: 700px;
+    }
+
+    /* Kotak Informasi dengan sisi kiri hitam */
+    .info-box {
+      display: flex;
+      border: 2px solid black;
+      border-radius: 10px;
+      background-color: #fff;
+      overflow: hidden;
+    }
+
+    .black-side {
+      width: 15px;
+      background-color: black;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .info-content-wrapper {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .info-content-wrapper h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .info-content {
+      border: 1px solid black;
+      padding: 15px;
+      border-radius: 5px;
+      min-height: 100px;
+      margin-top: 10px;
+    }
+
+    .table-box {
+      border: 2px solid black;
+      border-radius: 10px;
+      padding: 20px;
+      background-color: #fff;
+      height: 300px;
+      overflow-y: auto;
+    }
+
+    .table-box h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #ddd;
+    }
+
+    .clear-btn {
+      margin-top: 10px;
+      background-color: crimson;
+    }
+
+    .clear-btn:hover {
+      background-color: darkred;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Form Input Data -->
+    <div class="form-box">
+      <h2>Input Data</h2>
+      <form id="formData">
+        <label for="nama">Nama Lengkap:</label>
+        <input type="text" id="nama" name="nama" required>
+
+        <label for="nim">NIM:</label>
+        <input type="text" id="nim" name="nim" required>
+
+        <label for="semester">Semester:</label>
+        <select id="semester" name="semester" required>
+          <option value="">-- Pilih Semester --</option>
+          <!-- Otomatis dari 1–13 -->
+          <script>
+            for(let i = 1; i <= 13; i++){
+              document.write(`<option value="${i}">Semester ${i}</option>`);
+            }
+          </script>
+        </select>
+
+        <label for="prodi">Program Studi:</label>
+        <select id="prodi" name="prodi" required>
+          <option value="">-- Pilih Program Studi --</option>
+          <option value="Teknik Informatika">Teknik Informatika</option>
+          <option value="Teknik Sipil">Teknik Sipil</option>
+          <option value="Teknik Mesin">Teknik Mesin</option>
+          <option value="Teknik Geologi">Teknik Geologi</option>
+        </select>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="button" onclick="kirimData()">Kirim Data</button>
+      </form>
+    </div>
+
+    <!-- Sisi kanan -->
+    <div class="right-side">
+      <!-- Informasi Pengiriman dengan sisi kiri hitam -->
+      <div class="info-box">
+        <div class="black-side"></div>
+        <div class="info-content-wrapper">
+          <h2>Informasi Pengiriman Data</h2>
+          <div class="info-content" id="hasil">
+            <p>Data yang dikirim akan muncul di sini...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabel Mahasiswa -->
+      <div class="table-box">
+        <h2>Tabel Mahasiswa</h2>
+        <div id="tabelMahasiswa">
+          <p>Belum ada data.</p>
+        </div>
+        <button class="clear-btn" onclick="hapusSemua()">Hapus Semua Data</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let dataMahasiswa = [];
+
+    function kirimData() {
+      const nama = document.getElementById('nama').value;
+      const nim = document.getElementById('nim').value;
+      const semester = document.getElementById('semester').value;
+      const prodi = document.getElementById('prodi').value;
+      const email = document.getElementById('email').value;
+
+      if (!nama || !nim || !semester || !prodi || !email) {
+        alert("Harap isi semua data terlebih dahulu!");
+        return;
+      }
+
+      // Tampilkan hasil di kotak atas
+      document.getElementById('hasil').innerHTML = `
+        <strong>Nama Lengkap:</strong> ${nama}<br>
+        <strong>NIM:</strong> ${nim}<br>
+        <strong>Semester:</strong> ${semester}<br>
+        <strong>Program Studi:</strong> ${prodi}<br>
+        <strong>Email:</strong> ${email}
+      `;
+
+      // Simpan ke array
+      dataMahasiswa.push({ nama, nim, semester, prodi, email });
+
+      // Buat tabel mahasiswa
+      let tabelHTML = `
+        <table>
+          <tr>
+            <th>Nama</th>
+            <th>NIM</th>
+            <th>Semester</th>
+            <th>Prodi</th>
+            <th>Email</th>
+          </tr>
+      `;
+
+      dataMahasiswa.forEach(mhs => {
+        tabelHTML += `
+          <tr>
+            <td>${mhs.nama}</td>
+            <td>${mhs.nim}</td>
+            <td>${mhs.semester}</td>
+            <td>${mhs.prodi}</td>
+            <td>${mhs.email}</td>
+          </tr>
+        `;
+      });
+
+      tabelHTML += `</table>`;
+      document.getElementById('tabelMahasiswa').innerHTML = tabelHTML;
+
+      // Reset form
+      document.getElementById('formData').reset();
+    }
+
+    function hapusSemua() {
+      if (confirm("Yakin ingin menghapus semua data mahasiswa?")) {
+        dataMahasiswa = [];
+        document.getElementById('tabelMahasiswa').innerHTML = "<p>Belum ada data.</p>";
+        document.getElementById('hasil').innerHTML = "<p>Data yang dikirim akan muncul di sini...</p>";
+      }
+    }
+  </script>
+</body>
+</html>
